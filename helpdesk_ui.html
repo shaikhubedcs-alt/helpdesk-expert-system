@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HelpDesk Pro — Shaikh Ubed</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,600;1,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:         #f5f0e8;
+  --bg2:        #ede8de;
+  --glass:      rgba(255,252,246,0.72);
+  --glass2:     rgba(255,252,246,0.45);
+  --border:     rgba(180,165,140,0.28);
+  --border2:    rgba(180,165,140,0.15);
+  --text:       #2a2318;
+  --muted:      #7a6e5f;
+  --accent:     #c17f3a;
+  --accent-lt:  rgba(193,127,58,0.12);
+  --green:      #4a7c59;
+  --green-lt:   rgba(74,124,89,0.12);
+  --red:        #b94040;
+  --red-lt:     rgba(185,64,64,0.10);
+  --amber:      #d4860a;
+  --amber-lt:   rgba(212,134,10,0.12);
+  --shadow:     0 8px 32px rgba(100,80,40,0.10), 0 1px 2px rgba(100,80,40,0.06);
+  --shadow-lg:  0 20px 60px rgba(100,80,40,0.14), 0 2px 8px rgba(100,80,40,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Background mesh ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 700px 500px at 10% 20%, rgba(193,127,58,0.09) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 400px at 85% 75%, rgba(74,124,89,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 400px 300px at 60% 10%, rgba(212,134,10,0.06) 0%, transparent 60%);
+}
+
+/* ── Layout ── */
+.app { position: relative; z-index: 1; display: flex; min-height: 100vh; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 260px; flex-shrink: 0;
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  padding: 32px 20px 28px;
+  position: sticky; top: 0; height: 100vh;
+}
+
+.brand { margin-bottom: 36px; }
+.brand-logo {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--accent), #e8a055);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 16px rgba(193,127,58,0.35);
+  margin-bottom: 14px;
+}
+.brand-name {
+  font-family: 'Fraunces', serif;
+  font-size: 22px; font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+.brand-tagline { font-size: 12px; color: var(--muted); font-weight: 300; margin-top: 2px; }
+
+.nav-section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 10px; margin-top: 6px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13.5px; font-weight: 400;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.18s;
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+}
+.nav-item:hover { background: var(--glass2); color: var(--text); border-color: var(--border2); }
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(193,127,58,0.15), rgba(193,127,58,0.08));
+  color: var(--accent);
+  border-color: rgba(193,127,58,0.25);
+  font-weight: 500;
+}
+.nav-item .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+
+.sidebar-stats {
+  margin-top: 24px; padding: 16px;
+  background: var(--glass2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.sidebar-stats-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.mini-stat { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.mini-stat:last-child { margin-bottom: 0; }
+.mini-stat-label { font-size: 12px; color: var(--muted); }
+.mini-stat-val { font-size: 15px; font-weight: 600; color: var(--text); font-family: 'Fraunces', serif; }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11.5px; color: var(--muted);
+  line-height: 1.7;
+}
+.sidebar-footer strong { color: var(--accent); font-weight: 500; }
+
+/* ── Main ── */
+.main {
+  flex: 1; padding: 36px 36px 40px;
+  display: flex; flex-direction: column; gap: 28px;
+  min-width: 0;
+}
+
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; }
+.page-title {
+  font-family: 'Fraunces', serif;
+  font-size: 34px; font-weight: 500; letter-spacing: -1px;
+  color: var(--text); line-height: 1.1;
+}
+.page-title em { font-style: italic; color: var(--accent); }
+.page-subtitle { font-size: 14px; color: var(--muted); margin-top: 6px; font-weight: 300; }
+.date-badge {
+  font-size: 12px; color: var(--muted);
+  background: var(--glass); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 14px;
+  backdrop-filter: blur(10px);
+  font-weight: 500;
+}
+
+/* ── Stat cards ── */
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.stat-card {
+  background: var(--glass);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 20px 18px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.stat-card-icon { font-size: 22px; margin-bottom: 12px; }
+.stat-card-val {
+  font-family: 'Fraunces', serif;
+  font-size: 30px; font-weight: 600; letter-spacing: -1px;
+  color: var(--text); line-height: 1;
+}
+.stat-card-label { font-size: 12px; color: var(--muted); margin-top: 5px; font-weight: 400; }
+
+/* ── Panels ── */
+.panel {
+  background: var(--glass);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.panel-header {
+  padding: 20px 24px 18px;
+  border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-title {
+  font-family: 'Fraunces', serif;
+  font-size: 19px; font-weight: 500; letter-spacing: -0.3px;
+}
+.panel-body { padding: 24px; }
+
+/* ── Form ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.form-input, .form-select, .form-textarea {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; color: var(--text);
+  background: rgba(255,252,246,0.6);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 14px;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: rgba(193,127,58,0.5);
+  box-shadow: 0 0 0 3px rgba(193,127,58,0.1);
+  background: rgba(255,252,246,0.9);
+}
+.form-textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+.form-input::placeholder, .form-textarea::placeholder { color: #b0a090; }
+
+.btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px; font-weight: 600;
+  padding: 11px 22px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #d4923f);
+  color: white;
+  box-shadow: 0 4px 14px rgba(193,127,58,0.35);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(193,127,58,0.45); }
+.btn-primary:active { transform: scale(0.97); }
+.btn-ghost {
+  background: var(--glass2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.btn-ghost:hover { background: var(--glass); color: var(--text); }
+
+/* ── Priority badges ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11.5px; font-weight: 600;
+  padding: 4px 10px; border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+.badge-critical { background: var(--red-lt); color: var(--red); border: 1px solid rgba(185,64,64,0.2); }
+.badge-high     { background: var(--amber-lt); color: var(--amber); border: 1px solid rgba(212,134,10,0.2); }
+.badge-medium   { background: var(--accent-lt); color: var(--accent); border: 1px solid rgba(193,127,58,0.2); }
+.badge-low      { background: var(--green-lt); color: var(--green); border: 1px solid rgba(74,124,89,0.2); }
+
+.status-badge {
+  font-size: 11px; font-weight: 500; padding: 3px 9px;
+  border-radius: 999px;
+}
+.status-Open     { background: rgba(212,134,10,0.1); color: var(--amber); }
+.status-progress { background: rgba(193,127,58,0.1); color: var(--accent); }
+.status-Resolved { background: var(--green-lt); color: var(--green); }
+.status-Closed   { background: rgba(120,110,100,0.1); color: var(--muted); }
+
+/* ── Ticket table ── */
+.ticket-table { width: 100%; border-collapse: collapse; }
+.ticket-table th {
+  text-align: left; font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--muted); padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(245,240,232,0.5);
+}
+.ticket-table td { padding: 13px 16px; font-size: 13.5px; border-bottom: 1px solid var(--border2); }
+.ticket-table tr:last-child td { border-bottom: none; }
+.ticket-table tr:hover td { background: rgba(193,127,58,0.04); }
+.ticket-id { font-family: 'Fraunces', serif; font-weight: 500; color: var(--accent); font-size: 14px; }
+.ticket-name { font-weight: 500; }
+.ticket-issue { color: var(--muted); font-size: 13px; }
+
+.update-btn {
+  font-size: 11.5px; padding: 5px 12px; border-radius: 7px;
+  background: var(--glass2); border: 1px solid var(--border);
+  color: var(--muted); cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500; transition: all 0.15s;
+}
+.update-btn:hover { background: var(--accent-lt); color: var(--accent); border-color: rgba(193,127,58,0.3); }
+
+/* ── Solution card ── */
+.solution-card {
+  background: linear-gradient(135deg, rgba(255,252,246,0.9), rgba(245,240,232,0.7));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  animation: slideIn 0.3s cubic-bezier(0.34,1.2,0.64,1);
+}
+@keyframes slideIn { from { opacity:0; transform: translateY(12px) scale(0.98); } }
+.solution-meta {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  margin-bottom: 20px;
+}
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-label { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.meta-val { font-size: 14px; font-weight: 500; color: var(--text); }
+.solution-steps { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.solution-steps li {
+  display: flex; gap: 12px; align-items: flex-start;
+  font-size: 14px; line-height: 1.55; padding: 10px 14px;
+  background: rgba(255,255,255,0.55);
+  border-radius: 10px;
+  border: 1px solid var(--border2);
+}
+.step-num {
+  min-width: 22px; height: 22px;
+  background: var(--accent); color: white;
+  border-radius: 6px; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.solution-steps li.critical { border-color: rgba(185,64,64,0.2); background: rgba(185,64,64,0.04); }
+.solution-steps li.critical .step-num { background: var(--red); }
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center; padding: 48px 24px; color: var(--muted);
+}
+.empty-state-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+.empty-state-text { font-size: 14px; }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(40,30,15,0.25);
+  backdrop-filter: blur(6px);
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(1.5);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  width: min(420px, 92vw);
+  box-shadow: var(--shadow-lg);
+  animation: popIn 0.22s cubic-bezier(0.34,1.4,0.64,1);
+}
+@keyframes popIn { from { opacity:0; transform: scale(0.9); } }
+.modal-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500; margin-bottom: 18px; }
+.modal-footer { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 200;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 20px;
+  box-shadow: var(--shadow-lg);
+  font-size: 13.5px; font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+  transform: translateY(80px); opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34,1.3,0.64,1);
+  max-width: 320px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ── Tabs ── */
+.tab-bar { display: flex; gap: 4px; }
+.tab-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px; font-weight: 500; padding: 8px 18px;
+  border-radius: 9px; border: 1px solid transparent;
+  cursor: pointer; transition: all 0.15s;
+  color: var(--muted); background: transparent;
+}
+.tab-btn.active { background: var(--glass); border-color: var(--border); color: var(--text); box-shadow: var(--shadow); }
+.tab-btn:not(.active):hover { background: var(--glass2); color: var(--text); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">🎯</div>
+      <div class="brand-name">HelpDesk Pro</div>
+      <div class="brand-tagline">Expert System by Shaikh Ubed</div>
+    </div>
+
+    <div class="nav-section-label">Navigation</div>
+    <div class="nav-item active" onclick="switchTab('report')" id="nav-report">
+      <span class="nav-icon">➕</span> Report Issue
+    </div>
+    <div class="nav-item" onclick="switchTab('tickets')" id="nav-tickets">
+      <span class="nav-icon">🗂️</span> All Tickets
+    </div>
+
+    <div class="sidebar-stats" id="sidebarStats">
+      <div class="sidebar-stats-title">Live Stats</div>
+      <div class="mini-stat">
+        <span class="mini-stat-label">Total Tickets</span>
+        <span class="mini-stat-val" id="stTotal">0</span>
+      </div>
+      <div class="mini-stat">
+        <span class="mini-stat-label">Open</span>
+        <span class="mini-stat-val" id="stOpen">0</span>
+      </div>
+      <div class="mini-stat">
+        <span class="mini-stat-label">Resolved</span>
+        <span class="mini-stat-val" id="stResolved">0</span>
+      </div>
+      <div class="mini-stat">
+        <span class="mini-stat-label">Critical</span>
+        <span class="mini-stat-val" id="stCritical">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      Rule-Based Expert System<br>
+      Inference Engine + Pattern Match<br><br>
+      Built by <strong>Shaikh Ubed</strong>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">Help Desk <em>Expert</em> System</div>
+        <div class="page-subtitle">AI-powered issue diagnosis · Automated ticket management</div>
+      </div>
+      <div class="date-badge" id="dateBadge"></div>
+    </div>
+
+    <!-- Stat row -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-card-icon">🎫</div>
+        <div class="stat-card-val" id="c1">0</div>
+        <div class="stat-card-label">Total Tickets</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">🔓</div>
+        <div class="stat-card-val" id="c2">0</div>
+        <div class="stat-card-label">Open</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">✅</div>
+        <div class="stat-card-val" id="c3">0</div>
+        <div class="stat-card-label">Resolved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">🚨</div>
+        <div class="stat-card-val" id="c4">0</div>
+        <div class="stat-card-label">Critical</div>
+      </div>
+    </div>
+
+    <!-- Tab: Report Issue -->
+    <div id="tab-report">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Report a New Issue</div>
+          <div class="tab-bar">
+            <button class="tab-btn active" id="formTabBtn">📝 Form</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input class="form-input" id="userName" placeholder="e.g. Shaikh Ubed" type="text">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <select class="form-select" id="userDept">
+                <option value="">Select department</option>
+                <option>IT</option><option>HR</option><option>Finance</option>
+                <option>Operations</option><option>Sales</option><option>Other</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Describe Your Issue</label>
+              <textarea class="form-textarea" id="issueDesc" placeholder="e.g. my wifi is not connecting, I forgot my password, the printer is not detected…"></textarea>
+            </div>
+          </div>
+          <div style="margin-top:18px; display:flex; gap:10px; align-items:center;">
+            <button class="btn btn-primary" onclick="submitIssue()">⚡ Diagnose & Create Ticket</button>
+            <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+            <span style="font-size:12px;color:var(--muted);margin-left:4px;">Inference engine auto-diagnoses your issue</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Solution output -->
+      <div id="solutionBox" style="display:none;"></div>
+    </div>
+
+    <!-- Tab: All Tickets -->
+    <div id="tab-tickets" style="display:none;">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">All Tickets</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <select class="form-select" id="filterStatus" style="padding:6px 10px;font-size:12px;width:auto;" onchange="renderTickets()">
+              <option value="">All Status</option>
+              <option>Open</option><option>In Progress</option>
+              <option>Resolved</option><option>Closed</option>
+            </select>
+            <select class="form-select" id="filterPriority" style="padding:6px 10px;font-size:12px;width:auto;" onchange="renderTickets()">
+              <option value="">All Priority</option>
+              <option>Critical</option><option>High</option>
+              <option>Medium</option><option>Low</option>
+            </select>
+          </div>
+        </div>
+        <div id="ticketTableWrap">
+          <div class="empty-state">
+            <div class="empty-state-icon">🗂️</div>
+            <div class="empty-state-text">No tickets yet. Report an issue to get started.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Update Modal -->
+<div class="modal-overlay" id="updateModal">
+  <div class="modal">
+    <div class="modal-title">Update Ticket Status</div>
+    <div class="form-group" style="margin-bottom:14px;">
+      <label class="form-label">Ticket ID</label>
+      <input class="form-input" id="modalTicketId" readonly style="background:rgba(0,0,0,0.04);color:var(--muted);">
+    </div>
+    <div class="form-group">
+      <label class="form-label">New Status</label>
+      <select class="form-select" id="modalStatus">
+        <option>Open</option>
+        <option>In Progress</option>
+        <option>Resolved</option>
+        <option>Closed</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmUpdate()">Update Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── KNOWLEDGE BASE ──────────────────────────────────────────────
+const KB = [
+  { issue_type:"Internet / Network", keywords:["internet","wifi","network","no connection","disconnected","slow internet","router"], priority:"High",
+    solution:["Restart your router and modem.","Check if other devices are also affected.","Run: ipconfig /release and ipconfig /renew (Windows).","Disable/enable the network adapter.","Contact ISP if issue persists."],
+    escalate_to:"Network Team", est_time:"30 minutes" },
+  { issue_type:"Password / Login", keywords:["password","login","locked","can't sign in","forgot","access denied","credentials"], priority:"High",
+    solution:["Use 'Forgot Password' link on the login page.","Check CAPS LOCK is off.","Clear browser cache and cookies.","Try incognito/private mode.","Contact admin if account is locked."],
+    escalate_to:"IT Security Team", est_time:"15 minutes" },
+  { issue_type:"Software / Application", keywords:["software","app","application","crash","not opening","install","error","freeze","not responding"], priority:"Medium",
+    solution:["Restart the application.","Check for pending software updates.","Restart your computer.","Uninstall and reinstall the software.","Check error logs for specific error codes."],
+    escalate_to:"Software Support Team", est_time:"45 minutes" },
+  { issue_type:"Hardware / Device", keywords:["hardware","printer","keyboard","mouse","monitor","screen","device","usb","not detected","blue screen"], priority:"Medium",
+    solution:["Check all cable connections.","Restart the device.","Try a different USB port.","Update or reinstall device drivers.","Test the device on another computer."],
+    escalate_to:"Hardware Support Team", est_time:"1 hour" },
+  { issue_type:"Email", keywords:["email","mail","outlook","gmail","inbox","send","receive","attachment","spam"], priority:"Medium",
+    solution:["Check your internet connection.","Verify email account settings (SMTP/IMAP).","Check spam/junk folder.","Clear email cache.","Re-add your email account if needed."],
+    escalate_to:"Email Support Team", est_time:"30 minutes" },
+  { issue_type:"Performance / Speed", keywords:["slow","performance","speed","lag","hanging","overheating","ram","memory","cpu"], priority:"Low",
+    solution:["Close unused background applications.","Run Disk Cleanup and Defragmenter.","Check for malware/virus.","Upgrade RAM if consistently low.","Restart the system daily."],
+    escalate_to:"IT Support Team", est_time:"1 hour" },
+  { issue_type:"Virus / Security", keywords:["virus","malware","hack","phishing","suspicious","ransomware","security","infected","spam mail"], priority:"Critical",
+    solution:["IMMEDIATELY disconnect from the network.","Do NOT open any more suspicious files.","Run a full antivirus scan.","Change all passwords from a clean device.","Report to IT Security team immediately."],
+    escalate_to:"IT Security Team (URGENT)", est_time:"Immediate" },
+  { issue_type:"VPN / Remote Access", keywords:["vpn","remote","work from home","access","tunnel","connect remotely","remote desktop"], priority:"High",
+    solution:["Check your internet connection first.","Restart the VPN client.","Verify your VPN credentials.","Try a different VPN server.","Reinstall the VPN client if needed."],
+    escalate_to:"Network Team", est_time:"20 minutes" },
+];
+
+const PRIORITY_ICONS = { Critical:"🚨", High:"⚠️", Medium:"🔸", Low:"🔹" };
+
+let tickets = [];
+let ticketCounter = 1000;
+let editingTicketId = null;
+
+// ── UTILS ──────────────────────────────────────────────────────
+function now() {
+  return new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function diagnose(desc) {
+  const d = desc.toLowerCase();
+  for(const rule of KB) for(const kw of rule.keywords) if(d.includes(kw)) return rule;
+  return null;
+}
+function badgeClass(p) { return 'badge badge-'+p.toLowerCase(); }
+function statusClass(s) { return 'status-badge status-'+(s==='In Progress'?'progress':s); }
+
+// ── STATS ──────────────────────────────────────────────────────
+function updateStats() {
+  const total = tickets.length;
+  const open = tickets.filter(t=>t.status==='Open').length;
+  const resolved = tickets.filter(t=>['Resolved','Closed'].includes(t.status)).length;
+  const critical = tickets.filter(t=>t.priority==='Critical').length;
+  ['c1','stTotal'].forEach(id=>document.getElementById(id).textContent=total);
+  ['c2','stOpen'].forEach(id=>document.getElementById(id).textContent=open);
+  ['c3','stResolved'].forEach(id=>document.getElementById(id).textContent=resolved);
+  ['c4','stCritical'].forEach(id=>document.getElementById(id).textContent=critical);
+}
+
+// ── SUBMIT ─────────────────────────────────────────────────────
+function submitIssue() {
+  const name = document.getElementById('userName').value.trim() || 'User';
+  const dept = document.getElementById('userDept').value || 'General';
+  const desc = document.getElementById('issueDesc').value.trim();
+  if(!desc){ showToast('⚠️ Please describe your issue first.'); return; }
+
+  const rule = diagnose(desc);
+  ticketCounter++;
+  const ticket = {
+    id: `TKT-${ticketCounter}`, name, dept, description: desc,
+    issue_type: rule ? rule.issue_type : 'General',
+    priority: rule ? rule.priority : 'Low',
+    status: 'Open', time: now(),
+    escalate_to: rule ? rule.escalate_to : 'IT Support',
+    solution: rule ? rule.solution : null,
+    est_time: rule ? rule.est_time : 'N/A',
+  };
+  tickets.unshift(ticket);
+  updateStats();
+  renderSolution(ticket, rule);
+  showToast(`✅ Ticket ${ticket.id} created successfully!`);
+}
+
+function renderSolution(ticket, rule) {
+  const box = document.getElementById('solutionBox');
+  box.style.display = 'block';
+
+  const isCritical = ticket.priority === 'Critical';
+  const stepsHtml = (rule ? rule.solution : ['No specific rule matched. Please contact IT Support at helpdesk@company.com'])
+    .map((s,i) => `<li class="${isCritical?'critical':''}">
+      <span class="step-num">${i+1}</span>
+      <span>${s}</span>
+    </li>`).join('');
+
+  box.innerHTML = `
+    <div class="solution-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:500;">
+          ${PRIORITY_ICONS[ticket.priority]} Diagnosis Result
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="${badgeClass(ticket.priority)}">${ticket.priority}</span>
+          <span style="font-size:12px;color:var(--muted);font-family:'Fraunces',serif;">${ticket.id}</span>
+        </div>
+      </div>
+      <div class="solution-meta">
+        <div class="meta-item">
+          <span class="meta-label">Issue Type</span>
+          <span class="meta-val">${ticket.issue_type}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Escalate To</span>
+          <span class="meta-val">${ticket.escalate_to}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Est. Time</span>
+          <span class="meta-val">${ticket.est_time}</span>
+        </div>
+      </div>
+      <div style="font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:10px;">
+        Recommended Steps
+      </div>
+      <ul class="solution-steps">${stepsHtml}</ul>
+      <div style="margin-top:16px;font-size:11.5px;color:var(--muted);">
+        Logged at ${ticket.time} · Department: ${ticket.dept}
+      </div>
+    </div>`;
+  box.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ── TICKETS TABLE ──────────────────────────────────────────────
+function renderTickets() {
+  const wrap = document.getElementById('ticketTableWrap');
+  const fs = document.getElementById('filterStatus').value;
+  const fp = document.getElementById('filterPriority').value;
+  let list = tickets.filter(t =>
+    (!fs || t.status===fs) && (!fp || t.priority===fp)
+  );
+  if(!list.length) {
+    wrap.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🗂️</div><div class="empty-state-text">No tickets match the current filter.</div></div>`;
+    return;
+  }
+  wrap.innerHTML = `<table class="ticket-table">
+    <thead><tr>
+      <th>Ticket ID</th><th>Name</th><th>Dept</th><th>Issue Type</th>
+      <th>Priority</th><th>Status</th><th>Time</th><th>Action</th>
+    </tr></thead>
+    <tbody>${list.map(t=>`<tr>
+      <td><span class="ticket-id">${t.id}</span></td>
+      <td><span class="ticket-name">${t.name}</span></td>
+      <td style="font-size:12.5px;color:var(--muted);">${t.dept}</td>
+      <td><span class="ticket-issue">${t.issue_type}</span></td>
+      <td><span class="${badgeClass(t.priority)}">${PRIORITY_ICONS[t.priority]} ${t.priority}</span></td>
+      <td><span class="${statusClass(t.status)}">${t.status}</span></td>
+      <td style="font-size:12px;color:var(--muted);white-space:nowrap;">${t.time}</td>
+      <td><button class="update-btn" onclick="openModal('${t.id}')">✏️ Update</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
+function openModal(tid) {
+  editingTicketId = tid;
+  const t = tickets.find(x=>x.id===tid);
+  document.getElementById('modalTicketId').value = tid;
+  document.getElementById('modalStatus').value = t.status;
+  document.getElementById('updateModal').classList.add('open');
+}
+function closeModal() { document.getElementById('updateModal').classList.remove('open'); }
+function confirmUpdate() {
+  const newStatus = document.getElementById('modalStatus').value;
+  const t = tickets.find(x=>x.id===editingTicketId);
+  if(t){ t.status = newStatus; updateStats(); renderTickets(); }
+  closeModal();
+  showToast(`✅ ${editingTicketId} updated to "${newStatus}"`);
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 3200);
+}
+
+// ── NAV ───────────────────────────────────────────────────────
+function switchTab(tab) {
+  ['report','tickets'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===tab ? 'flex' : 'none';
+    document.getElementById('tab-'+t).style.flexDirection = 'column';
+    document.getElementById('tab-'+t).style.gap = '20px';
+    document.getElementById('nav-'+t).classList.toggle('active', t===tab);
+  });
+  if(tab==='tickets') renderTickets();
+}
+
+function clearForm() {
+  document.getElementById('userName').value='';
+  document.getElementById('userDept').value='';
+  document.getElementById('issueDesc').value='';
+  document.getElementById('solutionBox').style.display='none';
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+document.getElementById('dateBadge').textContent =
+  new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+
+document.getElementById('tab-report').style.display='flex';
+document.getElementById('tab-report').style.flexDirection='column';
+document.getElementById('tab-report').style.gap='20px';
+
+// Close modal on overlay click
+document.getElementById('updateModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+</script>
+</body>
+</html>
